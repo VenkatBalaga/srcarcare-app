@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta(${offer.id} != null ? 'Edit Offer' : 'Add Offer')}"></head>
+<body>
+<div class="admin-shell">
+  <div th:replace="~{admin/fragments/shell-head :: sidebar('offers')}"></div>
+  <main class="admin-main">
+    <div th:replace="~{admin/fragments/shell-head :: topbar(${offer.id} != null ? 'Edit Offer' : 'Add Offer')}"></div>
+    <div th:replace="~{admin/fragments/shell-head :: alerts}"></div>
+
+    <div class="sr-card" style="max-width:600px;">
+      <form th:action="@{/admin/offers/save}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" th:value="${offer.id}" />
+        <div style="margin-bottom:14px;">
+          <label class="form-label">Title</label>
+          <input type="text" name="title" class="form-control" th:value="${offer.title}" required />
+        </div>
+        <div style="margin-bottom:14px;">
+          <label class="form-label">Description</label>
+          <textarea name="description" class="form-control" rows="3" th:text="${offer.description}"></textarea>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+          <div>
+            <label class="form-label">Start Date</label>
+            <input type="date" name="startDate" class="form-control" th:value="${offer.startDate}" required />
+          </div>
+          <div>
+            <label class="form-label">End Date</label>
+            <input type="date" name="endDate" class="form-control" th:value="${offer.endDate}" required />
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label class="form-label">Banner Image</label>
+          <input type="file" name="image" class="form-control" accept="image/*" />
+        </div>
+        <label class="form-label" style="margin-bottom:20px; display:block;">
+          <input type="checkbox" name="active" value="true" th:checked="${offer.id == null ? true : offer.active}" /> Active
+        </label>
+        <button type="submit" class="btn-gold">Save Offer</button>
+        <a href="/admin/offers" class="btn-outline-gold">Cancel</a>
+      </form>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

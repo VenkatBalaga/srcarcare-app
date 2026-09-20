@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Car Service')}"></head>
+<body>
+<div th:replace="~{fragments/header :: header(${active})}"></div>
+
+<section class="hero" style="padding:50px 0;">
+  <div class="container-xl">
+    <div class="hero-eyebrow">Car Service</div>
+    <h1 style="font-size:2.2rem;">Expert Car Servicing</h1>
+    <p class="lead">Book a service slot and let our technicians take care of the rest.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:20px;">
+  <div class="container-xl">
+    <div th:if="${success}" class="alert-sr alert-success-sr" th:text="${success}">Success</div>
+    <div th:if="${error}" class="alert-sr alert-danger-sr" th:text="${error}">Error</div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:36px;">
+      <div>
+        <h3>Service Options</h3>
+        <div class="sr-card" style="margin-bottom:16px;" th:each="opt : ${options}">
+          <h4 style="margin:0 0 6px;" th:text="${opt.name}">Option</h4>
+          <p style="color:var(--sr-muted); font-size:0.9rem; margin:0 0 10px;" th:text="${opt.description}">Description</p>
+          <strong style="color:var(--sr-gold-light);">&#8377;<span th:text="${opt.price}">0</span></strong>
+        </div>
+        <p th:if="${#lists.isEmpty(options)}" style="color:var(--sr-muted);">No service options available right now. Please check back soon.</p>
+      </div>
+
+      <div class="sr-card">
+        <h3 style="margin-top:0;">Book a Service</h3>
+        <form th:action="@{/car-service/book}" method="post">
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Service Option</label>
+            <select name="optionId" class="form-select" required>
+              <option th:each="opt : ${options}" th:value="${opt.id}" th:text="${opt.name} + ' - Rs.' + ${opt.price}">Option</option>
+            </select>
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Your Name</label>
+            <input type="text" name="customerName" class="form-control" required />
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" name="customerPhone" class="form-control" required />
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Email (optional)</label>
+            <input type="email" name="customerEmail" class="form-control" />
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Vehicle Details</label>
+            <input type="text" name="vehicleInfo" class="form-control" placeholder="e.g. Swift Dzire - KA01AB1234" />
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Preferred Date</label>
+            <input type="date" name="preferredDate" class="form-control" required />
+          </div>
+          <div style="margin-bottom:20px;">
+            <label class="form-label">Describe the Issue (optional)</label>
+            <textarea name="issueDescription" class="form-control" rows="2" placeholder="e.g. Brake noise, AC not cooling"></textarea>
+          </div>
+          <button type="submit" class="btn-gold" style="width:100%; justify-content:center;">Request Service</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: floatingActions}"></div>
+<script src="/js/main.js"></script>
+</body>
+</html>

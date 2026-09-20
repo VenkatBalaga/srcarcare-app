@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="sidebar(active)">
+  <aside class="admin-sidebar">
+    <a href="/admin/dashboard" class="brand"><span>SR</span> CAR CARE Admin</a>
+    <nav class="admin-nav">
+      <a href="/admin/dashboard" th:classappend="${active == 'dashboard'} ? 'active'">&#128202; Dashboard</a>
+      <a href="/admin/vehicles" th:classappend="${active == 'vehicles'} ? 'active'">&#128663; Vehicles</a>
+      <a href="/admin/bookings" th:classappend="${active == 'bookings'} ? 'active'">&#128197; Rental Bookings</a>
+      <a href="/admin/car-wash/requests" th:classappend="${active == 'wash-requests'} ? 'active'">&#128167; Wash Requests</a>
+      <a href="/admin/car-wash/options" th:classappend="${active == 'wash-options'} ? 'active'">&#128736;&#65039; Wash Options</a>
+      <a href="/admin/car-service/requests" th:classappend="${active == 'service-requests'} ? 'active'">&#128295; Service Requests</a>
+      <a href="/admin/car-service/options" th:classappend="${active == 'service-options'} ? 'active'">&#9881;&#65039; Service Options</a>
+      <a href="/admin/offers" th:classappend="${active == 'offers'} ? 'active'">&#127873; Offers</a>
+      <a href="/admin/promo-codes" th:classappend="${active == 'promo-codes'} ? 'active'">&#127991;&#65039; Promo Codes</a>
+      <a href="/admin/banners" th:classappend="${active == 'banners'} ? 'active'">&#128247; Banners</a>
+      <a href="/admin/reviews" th:classappend="${active == 'reviews'} ? 'active'">&#11088; Reviews</a>
+      <a href="/admin/reports" th:classappend="${active == 'reports'} ? 'active'">&#128200; Reports</a>
+      <a href="/admin/settings" th:classappend="${active == 'settings'} ? 'active'">&#9881;&#65039; Business Settings</a>
+      <a href="/admin/change-password" th:classappend="${active == 'change-password'} ? 'active'">&#128273; Change Password</a>
+      <form th:action="@{/admin/logout}" method="post" style="margin-top:16px;">
+        <button type="submit" style="background:none; border:1px solid var(--sr-border); color:var(--sr-muted); width:100%; text-align:left; padding:10px 12px; border-radius:10px; cursor:pointer;">&#8630; Logout</button>
+      </form>
+    </nav>
+  </aside>
+</th:block>
+
+<th:block th:fragment="topbar(title)">
+  <div class="admin-topbar">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <button class="admin-sidebar-toggle" style="display:none; background:none; border:none; color:var(--sr-white); font-size:1.4rem;" id="adminSidebarToggle">&#9776;</button>
+      <h2 style="margin:0;" th:text="${title}">Page Title</h2>
+    </div>
+    <a href="/" target="_blank" class="btn-outline-gold">View Website &#8599;</a>
+  </div>
+</th:block>
+
+<th:block th:fragment="alerts">
+  <div class="alert-sr alert-success-sr" th:if="${success}" th:text="${success}">Success</div>
+  <div class="alert-sr alert-danger-sr" th:if="${error}" th:text="${error}">Error</div>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Wash Requests')}"></head>
+<body>
+<div class="admin-shell">
+  <div th:replace="~{admin/fragments/shell-head :: sidebar('wash-requests')}"></div>
+  <main class="admin-main">
+    <div th:replace="~{admin/fragments/shell-head :: topbar('Car Wash Requests')}"></div>
+    <div th:replace="~{admin/fragments/shell-head :: alerts}"></div>
+
+    <div class="table-responsive-sr">
+      <table class="table-dark-sr">
+        <thead><tr><th>Customer</th><th>Option</th><th>Vehicle</th><th>Preferred Date</th><th>Address</th><th>Status</th><th>Update</th></tr></thead>
+        <tbody>
+          <tr th:each="b : ${bookings}">
+            <td th:text="${b.customerName} + ' / ' + ${b.customerPhone}">Customer</td>
+            <td th:text="${b.option.name}">Option</td>
+            <td th:text="${b.vehicleInfo}">Vehicle</td>
+            <td th:text="${b.preferredDate}">Date</td>
+            <td th:text="${b.address}">Address</td>
+            <td><span class="status-pill" th:classappend="'status-' + ${b.status}" th:text="${b.status}">PENDING</span></td>
+            <td>
+              <form th:action="@{/admin/car-wash/requests/{id}/status(id=${b.id})}" method="post" style="display:flex; gap:6px;">
+                <select name="status" class="form-select" style="padding:6px 10px; font-size:0.8rem;">
+                  <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${s == b.status}"></option>
+                </select>
+                <button type="submit" class="btn-outline-gold" style="padding:6px 12px; font-size:0.78rem;">Update</button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(bookings)}"><td colspan="7" style="color:var(--sr-muted);">No wash requests yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

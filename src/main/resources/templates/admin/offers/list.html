@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Offers')}"></head>
+<body>
+<div class="admin-shell">
+  <div th:replace="~{admin/fragments/shell-head :: sidebar('offers')}"></div>
+  <main class="admin-main">
+    <div th:replace="~{admin/fragments/shell-head :: topbar('Offers')}"></div>
+    <div th:replace="~{admin/fragments/shell-head :: alerts}"></div>
+
+    <div style="margin-bottom:18px;"><a href="/admin/offers/new" class="btn-gold">+ Add Offer</a></div>
+
+    <div class="table-responsive-sr">
+      <table class="table-dark-sr">
+        <thead><tr><th>Title</th><th>Start</th><th>End</th><th>Status</th><th>Running Now</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr th:each="o : ${offers}">
+            <td th:text="${o.title}">Title</td>
+            <td th:text="${o.startDate}">Start</td>
+            <td th:text="${o.endDate}">End</td>
+            <td><span th:class="${o.active} ? 'badge-active' : 'badge-inactive'" th:text="${o.active} ? 'Active' : 'Inactive'">Active</span></td>
+            <td th:text="${o.currentlyRunning} ? 'Yes' : 'No'">No</td>
+            <td style="display:flex; gap:8px;">
+              <a th:href="@{/admin/offers/{id}/edit(id=${o.id})}" class="btn-outline-gold" style="padding:6px 12px; font-size:0.78rem;">Edit</a>
+              <form th:action="@{/admin/offers/{id}/delete(id=${o.id})}" method="post">
+                <button type="submit" class="btn-outline-gold" style="padding:6px 12px; font-size:0.78rem;" data-confirm="Delete this offer?">Delete</button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(offers)}"><td colspan="6" style="color:var(--sr-muted);">No offers yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

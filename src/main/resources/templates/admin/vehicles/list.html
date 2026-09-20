@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Vehicles')}"></head>
+<body>
+<div class="admin-shell">
+  <div th:replace="~{admin/fragments/shell-head :: sidebar('vehicles')}"></div>
+  <main class="admin-main">
+    <div th:replace="~{admin/fragments/shell-head :: topbar('Vehicles')}"></div>
+    <div th:replace="~{admin/fragments/shell-head :: alerts}"></div>
+
+    <div style="margin-bottom:18px;">
+      <a href="/admin/vehicles/new" class="btn-gold">+ Add Vehicle</a>
+    </div>
+
+    <div class="table-responsive-sr">
+      <table class="table-dark-sr">
+        <thead>
+          <tr><th>Name</th><th>Seats</th><th>Self Drive</th><th>With Driver</th><th>Status</th><th>Available</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          <tr th:each="v : ${vehicles}">
+            <td th:text="${v.name}">Vehicle</td>
+            <td th:text="${v.seatingCapacity}">5</td>
+            <td th:text="${v.selfDriveAvailable} ? ('Rs.' + ${v.selfDrivePrice}) : 'No'">Yes</td>
+            <td th:text="${v.withDriverAvailable} ? ('Rs.' + ${v.withDriverPrice}) : 'No'">Yes</td>
+            <td><span th:class="${v.active} ? 'badge-active' : 'badge-inactive'" th:text="${v.active} ? 'Active' : 'Inactive'">Active</span></td>
+            <td th:text="${v.available} ? 'Available' : 'Unavailable'">Available</td>
+            <td style="display:flex; gap:8px; flex-wrap:wrap;">
+              <a th:href="@{/admin/vehicles/{id}/edit(id=${v.id})}" class="btn-outline-gold" style="padding:6px 14px; font-size:0.8rem;">Edit</a>
+              <form th:action="@{/admin/vehicles/{id}/deactivate(id=${v.id})}" method="post" th:if="${v.active}">
+                <button type="submit" class="btn-outline-gold" style="padding:6px 14px; font-size:0.8rem;">Deactivate</button>
+              </form>
+              <form th:action="@{/admin/vehicles/{id}/activate(id=${v.id})}" method="post" th:unless="${v.active}">
+                <button type="submit" class="btn-gold" style="padding:6px 14px; font-size:0.8rem;">Activate</button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(vehicles)}"><td colspan="7" style="color:var(--sr-muted);">No vehicles yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

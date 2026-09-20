@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Rent a Car')}"></head>
+<body>
+<div th:replace="~{fragments/header :: header(${active})}"></div>
+
+<section class="hero" style="padding:50px 0;">
+  <div class="container-xl">
+    <div class="hero-eyebrow">Rent a Car</div>
+    <h1 style="font-size:2.2rem;">Self-Drive &amp; With-Driver Rentals</h1>
+    <p class="lead">Pick your seating type, rental mode and dates to see available vehicles.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:30px;">
+  <div class="container-xl">
+    <form method="get" action="/rent-a-car" class="sr-card js-days-calc" style="margin-bottom:34px;">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; align-items:end;">
+        <div>
+          <label class="form-label">Seating</label>
+          <select name="seating" class="form-select">
+            <option value="">Any</option>
+            <option value="5" th:selected="${seating == 5}">5 Seater</option>
+            <option value="7" th:selected="${seating == 7}">7 Seater</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Rental Type</label>
+          <select name="rentalType" class="form-select">
+            <option value="">Any</option>
+            <option value="SELF_DRIVE" th:selected="${rentalType != null and rentalType.name() == 'SELF_DRIVE'}">Self Drive</option>
+            <option value="WITH_DRIVER" th:selected="${rentalType != null and rentalType.name() == 'WITH_DRIVER'}">With Driver</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Start Date</label>
+          <input type="date" name="startDate" class="form-control" th:value="${startDate}" />
+        </div>
+        <div>
+          <label class="form-label">End Date</label>
+          <input type="date" name="endDate" class="form-control" th:value="${endDate}" />
+        </div>
+        <div>
+          <button type="submit" class="btn-gold" style="width:100%; justify-content:center;">Search</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="vehicle-grid" th:if="${not #lists.isEmpty(vehicles)}">
+      <div class="vehicle-card" th:each="v : ${vehicles}">
+        <div class="vehicle-media" th:style="${v.imagePath != null} ? 'background-image:url(' + ${v.imagePath} + ')' : ''">
+          <span class="badge-seat" th:text="${v.seatingCapacity} + ' Seater'">5 Seater</span>
+        </div>
+        <div class="vehicle-body">
+          <h3 th:text="${v.name}">Vehicle</h3>
+          <p style="color:var(--sr-muted); font-size:0.88rem; margin:0;" th:text="${v.description}">Description</p>
+          <div class="vehicle-tags">
+            <span class="tag-pill" th:if="${v.selfDriveAvailable}">Self Drive</span>
+            <span class="tag-pill" th:if="${v.withDriverAvailable}">With Driver</span>
+          </div>
+          <div class="vehicle-price">
+            <div th:if="${v.selfDriveAvailable}">&#8377;<span th:text="${v.selfDrivePrice}">0</span> <small>/ day self-drive</small></div>
+            <div th:if="${v.withDriverAvailable}">&#8377;<span th:text="${v.withDriverPrice}">0</span> <small>/ day with driver</small></div>
+          </div>
+          <a th:href="@{/rent-a-car/{id}(id=${v.id}, startDate=${startDate}, endDate=${endDate}, rentalType=${rentalType})}"
+             class="btn-outline-gold" style="justify-content:center;">View &amp; Book</a>
+        </div>
+      </div>
+    </div>
+    <div class="sr-card" style="text-align:center;" th:if="${#lists.isEmpty(vehicles)}">
+      <p style="color:var(--sr-muted); margin:0;">No vehicles match your search. Try different dates or filters.</p>
+    </div>
+  </div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: floatingActions}"></div>
+<script src="/js/main.js"></script>
+</body>
+</html>

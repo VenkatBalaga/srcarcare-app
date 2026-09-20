@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header(active)" class="sr-navbar">
+  <div class="container-xl nav-inner">
+    <a href="/" class="sr-logo">
+      <span class="mark">SR</span> CAR CARE
+    </a>
+    <nav class="sr-nav-links" id="navLinks">
+      <a href="/" th:classappend="${active == 'home'} ? 'active'">Home</a>
+      <a href="/rent-a-car" th:classappend="${active == 'rent'} ? 'active'">Rent a Car</a>
+      <a href="/car-wash" th:classappend="${active == 'wash'} ? 'active'">Car Wash</a>
+      <a href="/car-service" th:classappend="${active == 'service'} ? 'active'">Car Service</a>
+      <a href="/reviews" th:classappend="${active == 'reviews'} ? 'active'">Reviews</a>
+      <a href="/#contact" th:classappend="${active == 'contact'} ? 'active'">Contact</a>
+    </nav>
+    <div style="display:flex; align-items:center; gap: 14px;">
+      <a href="/rent-a-car" class="btn-gold" style="display:none" id="navCta">Book Now</a>
+      <button class="sr-nav-toggle" id="navToggle" aria-label="Toggle navigation">&#9776;</button>
+    </div>
+  </div>
+</header>
+<script>
+  (function(){
+    var t = document.getElementById('navToggle');
+    var l = document.getElementById('navLinks');
+    if (t && l) { t.addEventListener('click', function(){ l.classList.toggle('open'); }); }
+  })();
+</script>
+</body>
+</html>

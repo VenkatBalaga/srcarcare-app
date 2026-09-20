@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta(${vehicle.name})}"></head>
+<body>
+<div th:replace="~{fragments/header :: header(${active})}"></div>
+
+<section class="section">
+  <div class="container-xl">
+    <div th:if="${error}" class="alert-sr alert-danger-sr" th:text="${error}">Error</div>
+
+    <div style="display:grid; grid-template-columns: 1.1fr 1fr; gap:40px;">
+      <div>
+        <div class="vehicle-media" style="height:340px; border-radius:14px;"
+             th:style="${vehicle.imagePath != null} ? 'height:340px;border-radius:14px;background-image:url(' + ${vehicle.imagePath} + ')' : 'height:340px;border-radius:14px;'"></div>
+        <h1 style="margin-top:24px;" th:text="${vehicle.name}">Vehicle</h1>
+        <div class="vehicle-tags" style="margin-bottom:14px;">
+          <span class="tag-pill" th:text="${vehicle.seatingCapacity} + ' Seater'">5 Seater</span>
+          <span class="tag-pill" th:if="${vehicle.selfDriveAvailable}">Self Drive</span>
+          <span class="tag-pill" th:if="${vehicle.withDriverAvailable}">With Driver</span>
+        </div>
+        <p style="color:var(--sr-muted); line-height:1.7;" th:text="${vehicle.description}">Description</p>
+        <div class="sr-card" style="margin-top:20px;">
+          <div th:if="${vehicle.selfDriveAvailable}" style="margin-bottom:10px;">Self Drive: &#8377;<strong th:text="${vehicle.selfDrivePrice}">0</strong> / day</div>
+          <div th:if="${vehicle.withDriverAvailable}">With Driver: &#8377;<strong th:text="${vehicle.withDriverPrice}">0</strong> / day</div>
+        </div>
+      </div>
+
+      <div class="sr-card js-days-calc">
+        <h3 style="margin-top:0;">Book This Vehicle</h3>
+        <form method="post" th:action="@{'/rent-a-car/' + ${vehicle.id} + '/book'}">
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Your Name</label>
+            <input type="text" name="customerName" class="form-control" required />
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" name="customerPhone" class="form-control" required />
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Email (optional)</label>
+            <input type="email" name="customerEmail" class="form-control" />
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Rental Type</label>
+            <select name="rentalType" class="form-select" required>
+              <option value="SELF_DRIVE" th:if="${vehicle.selfDriveAvailable}"
+                      th:selected="${rentalType != null and rentalType.name() == 'SELF_DRIVE'}">Self Drive</option>
+              <option value="WITH_DRIVER" th:if="${vehicle.withDriverAvailable}"
+                      th:selected="${rentalType != null and rentalType.name() == 'WITH_DRIVER'}">With Driver</option>
+            </select>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+            <div>
+              <label class="form-label">Start Date</label>
+              <input type="date" name="startDate" class="form-control" th:value="${startDate}" required />
+            </div>
+            <div>
+              <label class="form-label">End Date</label>
+              <input type="date" name="endDate" class="form-control" th:value="${endDate}" required />
+            </div>
+          </div>
+          <div style="margin-bottom:20px;">
+            <label class="form-label">Promo Code (optional)</label>
+            <input type="text" name="promoCode" class="form-control" placeholder="e.g. WELCOME10" />
+          </div>
+          <button type="submit" class="btn-gold" style="width:100%; justify-content:center;">Request Booking</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: floatingActions}"></div>
+<script src="/js/main.js"></script>
+</body>
+</html>

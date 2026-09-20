@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Reviews')}"></head>
+<body>
+<div th:replace="~{fragments/header :: header(${active})}"></div>
+
+<section class="hero" style="padding:50px 0;">
+  <div class="container-xl">
+    <div class="hero-eyebrow">Reviews</div>
+    <h1 style="font-size:2.2rem;">What Our Customers Say</h1>
+  </div>
+</section>
+
+<section class="section" style="padding-top:20px;">
+  <div class="container-xl">
+    <div th:if="${success}" class="alert-sr alert-success-sr" th:text="${success}">Success</div>
+    <div th:if="${error}" class="alert-sr alert-danger-sr" th:text="${error}">Error</div>
+
+    <div style="display:grid; grid-template-columns: 1.3fr 1fr; gap:36px;">
+      <div>
+        <div class="sr-card" style="margin-bottom:16px;" th:each="r : ${reviews}">
+          <div style="color:var(--sr-gold); margin-bottom:8px;">
+            <span th:each="i : ${#numbers.sequence(1, r.rating)}">&#9733;</span>
+          </div>
+          <p th:text="${r.reviewText}">Review text</p>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin:12px 0;" th:if="${not #lists.isEmpty(r.images)}">
+            <img th:each="img : ${r.images}" th:src="${img.imagePath}" style="width:90px; height:70px; object-fit:cover; border-radius:8px;" alt="Review photo" />
+          </div>
+          <strong th:text="${r.customerName}">Customer</strong>
+        </div>
+        <p th:if="${#lists.isEmpty(reviews)}" style="color:var(--sr-muted);">No reviews yet. Be the first to share your experience!</p>
+      </div>
+
+      <div class="sr-card" style="height:fit-content;">
+        <h3 style="margin-top:0;">Write a Review</h3>
+        <form th:action="@{/reviews/submit}" method="post" enctype="multipart/form-data">
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Your Name</label>
+            <input type="text" name="customerName" class="form-control" required />
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Rating</label>
+            <select name="rating" class="form-select" required>
+              <option value="5">5 - Excellent</option>
+              <option value="4">4 - Very Good</option>
+              <option value="3">3 - Good</option>
+              <option value="2">2 - Fair</option>
+              <option value="1">1 - Poor</option>
+            </select>
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Your Review</label>
+            <textarea name="reviewText" class="form-control" rows="4" required></textarea>
+          </div>
+          <div style="margin-bottom:20px;">
+            <label class="form-label">Car Photos (optional)</label>
+            <input type="file" name="photos" class="form-control" accept="image/*" multiple />
+          </div>
+          <button type="submit" class="btn-gold" style="width:100%; justify-content:center;">Submit Review</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: floatingActions}"></div>
+<script src="/js/main.js"></script>
+</body>
+</html>

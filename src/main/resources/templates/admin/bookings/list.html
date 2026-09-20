@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Rental Bookings')}"></head>
+<body>
+<div class="admin-shell">
+  <div th:replace="~{admin/fragments/shell-head :: sidebar('bookings')}"></div>
+  <main class="admin-main">
+    <div th:replace="~{admin/fragments/shell-head :: topbar('Rental Bookings')}"></div>
+    <div th:replace="~{admin/fragments/shell-head :: alerts}"></div>
+
+    <form method="get" action="/admin/bookings" class="sr-card" style="margin-bottom:20px;">
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; align-items:end;">
+        <div>
+          <label class="form-label">Customer / Phone</label>
+          <input type="text" name="customer" class="form-control" th:value="${customer}" />
+        </div>
+        <div>
+          <label class="form-label">Vehicle</label>
+          <input type="text" name="vehicle" class="form-control" th:value="${vehicle}" />
+        </div>
+        <div>
+          <label class="form-label">Status</label>
+          <select name="status" class="form-select">
+            <option value="">Any</option>
+            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${status == s}"></option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Active On Date</label>
+          <input type="date" name="date" class="form-control" th:value="${date}" />
+        </div>
+        <div><button type="submit" class="btn-gold" style="width:100%; justify-content:center;">Filter</button></div>
+      </div>
+    </form>
+
+    <div class="table-responsive-sr">
+      <table class="table-dark-sr">
+        <thead><tr><th>ID</th><th>Customer</th><th>Vehicle</th><th>Type</th><th>Dates</th><th>Total</th><th>Status</th><th>Update</th></tr></thead>
+        <tbody>
+          <tr th:each="b : ${bookings}">
+            <td th:text="${b.id}">1</td>
+            <td th:text="${b.customerName} + ' / ' + ${b.customerPhone}">Customer</td>
+            <td th:text="${b.vehicle.name}">Vehicle</td>
+            <td th:text="${b.rentalType}">SELF_DRIVE</td>
+            <td th:text="${b.startDate} + ' to ' + ${b.endDate}">Dates</td>
+            <td>&#8377;<span th:text="${b.totalPrice}">0</span></td>
+            <td><span class="status-pill" th:classappend="'status-' + ${b.status}" th:text="${b.status}">PENDING</span></td>
+            <td>
+              <form th:action="@{/admin/bookings/{id}/status(id=${b.id})}" method="post" style="display:flex; gap:6px;">
+                <select name="status" class="form-select" style="padding:6px 10px; font-size:0.8rem;">
+                  <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${s == b.status}"></option>
+                </select>
+                <button type="submit" class="btn-outline-gold" style="padding:6px 12px; font-size:0.78rem;">Update</button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(bookings)}"><td colspan="8" style="color:var(--sr-muted);">No bookings found.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

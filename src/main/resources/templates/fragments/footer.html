@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer th:fragment="footer" class="sr-footer" id="contact">
+  <div class="container-xl">
+    <div class="footer-grid">
+      <div>
+        <h4><span style="color:var(--sr-gold)">SR</span> CAR CARE</h4>
+        <p th:text="${businessSettings.address}">Address</p>
+        <p th:text="${businessSettings.workingHours}">Working hours</p>
+      </div>
+      <div>
+        <h4>Our Services</h4>
+        <p><a href="/rent-a-car">Rent a Car</a></p>
+        <p><a href="/car-wash">Car Wash</a></p>
+        <p><a href="/car-service">Car Service</a></p>
+      </div>
+      <div>
+        <h4>Get in Touch</h4>
+        <p>Phone: <a th:href="'tel:' + ${#strings.replace(businessSettings.phoneNumber, ' ', '')}" th:text="${businessSettings.phoneNumber}">Phone</a></p>
+        <p>Email: <a th:href="'mailto:' + ${businessSettings.email}" th:text="${businessSettings.email}">Email</a></p>
+        <p>WhatsApp: <a th:href="'https://wa.me/' + ${#strings.replace(#strings.replace(businessSettings.whatsappNumber, ' ', ''), '+', '')}"
+                        target="_blank" th:text="${businessSettings.whatsappNumber}">WhatsApp</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; <span th:text="${#temporals.year(#temporals.createNow())}">2026</span> SR CAR CARE. All rights reserved.
+      &middot; <a href="/admin/login">Admin</a>
+    </div>
+  </div>
+</footer>
+
+<div th:fragment="floatingActions" class="floating-actions">
+  <a class="fab fab-whatsapp"
+     th:href="'https://wa.me/' + ${#strings.replace(#strings.replace(businessSettings.whatsappNumber, ' ', ''), '+', '')} + '?text=Hi%20SR%20CAR%20CARE%2C%20I%20would%20like%20to%20know%20more.'"
+     target="_blank" title="Chat on WhatsApp" aria-label="WhatsApp">&#128172;</a>
+  <a class="fab fab-call" th:href="'tel:' + ${#strings.replace(businessSettings.phoneNumber, ' ', '')}" title="Call us" aria-label="Call">&#128222;</a>
+</div>
+</body>
+</html>

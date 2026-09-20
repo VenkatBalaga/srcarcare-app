@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Reviews')}"></head>
+<body>
+<div class="admin-shell">
+  <div th:replace="~{admin/fragments/shell-head :: sidebar('reviews')}"></div>
+  <main class="admin-main">
+    <div th:replace="~{admin/fragments/shell-head :: topbar('Reviews')}"></div>
+    <div th:replace="~{admin/fragments/shell-head :: alerts}"></div>
+
+    <div class="table-responsive-sr">
+      <table class="table-dark-sr">
+        <thead><tr><th>Customer</th><th>Rating</th><th>Review</th><th>Photos</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr th:each="r : ${reviews}">
+            <td th:text="${r.customerName}">Name</td>
+            <td th:text="${r.rating} + ' / 5'">5/5</td>
+            <td style="max-width:280px;" th:text="${r.reviewText}">Text</td>
+            <td>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <img th:each="img : ${r.images}" th:src="${img.imagePath}" style="width:48px; height:38px; object-fit:cover; border-radius:6px;" alt="Photo" />
+              </div>
+            </td>
+            <td>
+              <span th:if="${r.approved and not r.hidden}" class="badge-active">Published</span>
+              <span th:if="${r.hidden}" class="badge-inactive">Hidden</span>
+              <span th:if="${!r.approved and !r.hidden}" style="color:var(--sr-gold-light);">Pending</span>
+            </td>
+            <td style="display:flex; gap:8px; flex-wrap:wrap;">
+              <form th:action="@{/admin/reviews/{id}/approve(id=${r.id})}" method="post" th:if="${!r.approved or r.hidden}">
+                <button type="submit" class="btn-gold" style="padding:6px 12px; font-size:0.78rem;">Approve</button>
+              </form>
+              <form th:action="@{/admin/reviews/{id}/hide(id=${r.id})}" method="post" th:if="${r.approved and not r.hidden}">
+                <button type="submit" class="btn-outline-gold" style="padding:6px 12px; font-size:0.78rem;">Hide</button>
+              </form>
+              <form th:action="@{/admin/reviews/{id}/delete(id=${r.id})}" method="post">
+                <button type="submit" class="btn-outline-gold" style="padding:6px 12px; font-size:0.78rem;" data-confirm="Delete this review?">Delete</button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(reviews)}"><td colspan="6" style="color:var(--sr-muted);">No reviews yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

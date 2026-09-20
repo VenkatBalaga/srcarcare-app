@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Booking Confirmation')}"></head>
+<body>
+<div th:replace="~{fragments/header :: header(${active})}"></div>
+
+<section class="section">
+  <div class="container-xl" style="max-width:640px;">
+    <div th:if="${success}" class="alert-sr alert-success-sr" th:text="${success}">Success</div>
+    <div class="sr-card">
+      <h2 style="margin-top:0;">Booking Received</h2>
+      <p style="color:var(--sr-muted);">Reference #<strong th:text="${booking.id}">1</strong> &mdash; status:
+        <span class="status-pill" th:classappend="'status-' + ${booking.status}" th:text="${booking.status}">PENDING</span>
+      </p>
+      <table style="width:100%; margin:20px 0; font-size:0.92rem;">
+        <tr><td style="color:var(--sr-muted); padding:6px 0;">Vehicle</td><td th:text="${booking.vehicle.name}">Vehicle</td></tr>
+        <tr><td style="color:var(--sr-muted); padding:6px 0;">Rental Type</td><td th:text="${booking.rentalType}">SELF_DRIVE</td></tr>
+        <tr><td style="color:var(--sr-muted); padding:6px 0;">Dates</td><td th:text="${booking.startDate} + ' to ' + ${booking.endDate}">Dates</td></tr>
+        <tr><td style="color:var(--sr-muted); padding:6px 0;">Base Price</td><td>&#8377;<span th:text="${booking.basePrice}">0</span></td></tr>
+        <tr th:if="${booking.discountAmount.signum() > 0}"><td style="color:var(--sr-muted); padding:6px 0;">Discount</td><td>-&#8377;<span th:text="${booking.discountAmount}">0</span></td></tr>
+        <tr><td style="color:var(--sr-muted); padding:6px 0; font-weight:700;">Total</td><td style="font-weight:700; color:var(--sr-gold-light);">&#8377;<span th:text="${booking.totalPrice}">0</span></td></tr>
+      </table>
+      <form th:action="@{/payment/initiate}" method="post">
+        <input type="hidden" name="bookingType" value="RENTAL" />
+        <input type="hidden" name="bookingId" th:value="${booking.id}" />
+        <button type="submit" class="btn-gold" style="width:100%; justify-content:center;">Pay via PhonePe</button>
+      </form>
+      <p style="color:var(--sr-muted); font-size:0.82rem; margin-top:14px;">
+        You can also pay on pickup. Our team will call you at <strong th:text="${booking.customerPhone}">phone</strong> to confirm.
+      </p>
+      <a href="/rent-a-car" class="btn-outline-gold" style="margin-top:10px; justify-content:center; width:100%;">Browse More Vehicles</a>
+    </div>
+  </div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: floatingActions}"></div>
+</body>
+</html>

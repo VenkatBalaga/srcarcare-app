@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta(${vehicle.id} != null ? 'Edit Vehicle' : 'Add Vehicle')}"></head>
+<body>
+<div class="admin-shell">
+  <div th:replace="~{admin/fragments/shell-head :: sidebar('vehicles')}"></div>
+  <main class="admin-main">
+    <div th:replace="~{admin/fragments/shell-head :: topbar(${vehicle.id} != null ? 'Edit Vehicle' : 'Add Vehicle')}"></div>
+    <div th:replace="~{admin/fragments/shell-head :: alerts}"></div>
+
+    <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:24px; align-items:start;">
+      <div class="sr-card">
+        <form th:action="@{/admin/vehicles/save}" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="id" th:value="${vehicle.id}" />
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Vehicle Name</label>
+            <input type="text" name="name" class="form-control" th:value="${vehicle.name}" required />
+          </div>
+          <div style="margin-bottom:14px;">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="3" th:text="${vehicle.description}"></textarea>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+            <div>
+              <label class="form-label">Seating Capacity</label>
+              <select name="seatingCapacity" class="form-select" required>
+                <option value="5" th:selected="${vehicle.seatingCapacity == 5}">5 Seater</option>
+                <option value="7" th:selected="${vehicle.seatingCapacity == 7}">7 Seater</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Vehicle Photo</label>
+              <input type="file" name="image" class="form-control" accept="image/*" />
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+            <div>
+              <label class="form-label"><input type="checkbox" name="selfDriveAvailable" value="true" th:checked="${vehicle.selfDriveAvailable}" /> Self Drive Available</label>
+              <input type="number" step="0.01" name="selfDrivePrice" class="form-control" placeholder="Price per day" th:value="${vehicle.selfDrivePrice}" required style="margin-top:8px;" />
+            </div>
+            <div>
+              <label class="form-label"><input type="checkbox" name="withDriverAvailable" value="true" th:checked="${vehicle.withDriverAvailable}" /> With Driver Available</label>
+              <input type="number" step="0.01" name="withDriverPrice" class="form-control" placeholder="Price per day" th:value="${vehicle.withDriverPrice}" required style="margin-top:8px;" />
+            </div>
+          </div>
+          <div style="display:flex; gap:24px; margin-bottom:22px;">
+            <label class="form-label"><input type="checkbox" name="active" value="true" th:checked="${vehicle.id == null ? true : vehicle.active}" /> Active</label>
+            <label class="form-label"><input type="checkbox" name="available" value="true" th:checked="${vehicle.id == null ? true : vehicle.available}" /> Available</label>
+          </div>
+          <button type="submit" class="btn-gold">Save Vehicle</button>
+          <a href="/admin/vehicles" class="btn-outline-gold">Cancel</a>
+        </form>
+      </div>
+
+      <div th:if="${vehicle.id != null}">
+        <div class="sr-card" style="margin-bottom:20px;">
+          <h4 style="margin-top:0;">Block Dates (Maintenance / Unavailability)</h4>
+          <form method="post" th:action="@{/admin/vehicles/{id}/block-dates(id=${vehicle.id})}">
+            <div style="margin-bottom:10px;">
+              <label class="form-label">Start Date</label>
+              <input type="date" name="startDate" class="form-control" required />
+            </div>
+            <div style="margin-bottom:10px;">
+              <label class="form-label">End Date</label>
+              <input type="date" name="endDate" class="form-control" required />
+            </div>
+            <div style="margin-bottom:14px;">
+              <label class="form-label">Reason</label>
+              <input type="text" name="reason" class="form-control" placeholder="e.g. Maintenance" />
+            </div>
+            <button type="submit" class="btn-outline-gold" style="width:100%; justify-content:center;">Block Dates</button>
+          </form>
+        </div>
+
+        <div class="sr-card">
+          <h4 style="margin-top:0;">Blocked Periods</h4>
+          <table class="table-dark-sr" style="width:100%;">
+            <thead><tr><th>From</th><th>To</th><th>Reason</th><th></th></tr></thead>
+            <tbody>
+              <tr th:each="bd : ${blockedDates}">
+                <td th:text="${bd.startDate}">From</td>
+                <td th:text="${bd.endDate}">To</td>
+                <td th:text="${bd.reason}">Reason</td>
+                <td>
+                  <form th:action="@{/admin/vehicles/{id}/blocked-dates/{bid}/remove(id=${vehicle.id}, bid=${bd.id})}" method="post">
+                    <button type="submit" class="btn-outline-gold" style="padding:4px 10px; font-size:0.75rem;" data-confirm="Remove this blocked period?">Remove</button>
+                  </form>
+                </td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(blockedDates)}"><td colspan="4" style="color:var(--sr-muted);">No blocked dates.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

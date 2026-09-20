@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Dashboard')}"></head>
+<body>
+<div class="admin-shell">
+  <div th:replace="~{admin/fragments/shell-head :: sidebar('dashboard')}"></div>
+  <main class="admin-main">
+    <div th:replace="~{admin/fragments/shell-head :: topbar('Dashboard')}"></div>
+    <div th:replace="~{admin/fragments/shell-head :: alerts}"></div>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="value" th:text="${totalRentalBookings}">0</div><div class="label">Rental Bookings</div></div>
+      <div class="stat-card"><div class="value" th:text="${pendingRentalBookings}">0</div><div class="label">Pending Rentals</div></div>
+      <div class="stat-card"><div class="value" th:text="${totalWashRequests}">0</div><div class="label">Car Wash Requests</div></div>
+      <div class="stat-card"><div class="value" th:text="${pendingWashRequests}">0</div><div class="label">Pending Wash</div></div>
+      <div class="stat-card"><div class="value" th:text="${totalServiceRequests}">0</div><div class="label">Service Requests</div></div>
+      <div class="stat-card"><div class="value" th:text="${pendingServiceRequests}">0</div><div class="label">Pending Service</div></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px;">
+      <div>
+        <h3>Recent Bookings</h3>
+        <div class="table-responsive-sr">
+          <table class="table-dark-sr">
+            <thead><tr><th>Customer</th><th>Vehicle</th><th>Dates</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr th:each="b : ${recentBookings}">
+                <td th:text="${b.customerName}">Name</td>
+                <td th:text="${b.vehicle.name}">Vehicle</td>
+                <td th:text="${b.startDate} + ' - ' + ${b.endDate}">Dates</td>
+                <td><span class="status-pill" th:classappend="'status-' + ${b.status}" th:text="${b.status}">PENDING</span></td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(recentBookings)}"><td colspan="4" style="color:var(--sr-muted);">No bookings yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3>Upcoming Bookings</h3>
+        <div class="table-responsive-sr">
+          <table class="table-dark-sr">
+            <thead><tr><th>Customer</th><th>Vehicle</th><th>Start</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr th:each="b : ${upcomingBookings}">
+                <td th:text="${b.customerName}">Name</td>
+                <td th:text="${b.vehicle.name}">Vehicle</td>
+                <td th:text="${b.startDate}">Start</td>
+                <td><span class="status-pill" th:classappend="'status-' + ${b.status}" th:text="${b.status}">PENDING</span></td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(upcomingBookings)}"><td colspan="4" style="color:var(--sr-muted);">No upcoming bookings.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+      <div>
+        <h3>Recent Wash / Service Requests</h3>
+        <div class="table-responsive-sr">
+          <table class="table-dark-sr">
+            <thead><tr><th>Customer</th><th>Type</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr th:each="w : ${recentWashRequests}">
+                <td th:text="${w.customerName}">Name</td>
+                <td>Wash</td>
+                <td><span class="status-pill" th:classappend="'status-' + ${w.status}" th:text="${w.status}">PENDING</span></td>
+              </tr>
+              <tr th:each="s : ${recentServiceRequests}">
+                <td th:text="${s.customerName}">Name</td>
+                <td>Service</td>
+                <td><span class="status-pill" th:classappend="'status-' + ${s.status}" th:text="${s.status}">PENDING</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3>Recent Reviews</h3>
+        <div class="table-responsive-sr">
+          <table class="table-dark-sr">
+            <thead><tr><th>Customer</th><th>Rating</th><th>Approved</th></tr></thead>
+            <tbody>
+              <tr th:each="r : ${recentReviews}">
+                <td th:text="${r.customerName}">Name</td>
+                <td th:text="${r.rating} + ' / 5'">5/5</td>
+                <td th:text="${r.approved} ? 'Yes' : 'No'">No</td>
+              </tr>
+              <tr th:if="${#lists.isEmpty(recentReviews)}"><td colspan="3" style="color:var(--sr-muted);">No reviews yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

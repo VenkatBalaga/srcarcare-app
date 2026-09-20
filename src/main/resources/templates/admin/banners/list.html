@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Banners')}"></head>
+<body>
+<div class="admin-shell">
+  <div th:replace="~{admin/fragments/shell-head :: sidebar('banners')}"></div>
+  <main class="admin-main">
+    <div th:replace="~{admin/fragments/shell-head :: topbar('Banners')}"></div>
+    <div th:replace="~{admin/fragments/shell-head :: alerts}"></div>
+
+    <div style="display:grid; grid-template-columns:1.3fr 1fr; gap:24px;">
+      <div class="table-responsive-sr">
+        <table class="table-dark-sr">
+          <thead><tr><th>Preview</th><th>Title</th><th>Order</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr th:each="b : ${banners}">
+              <td><img th:src="${b.imagePath}" style="width:80px; height:50px; object-fit:cover; border-radius:6px;" alt="Banner" /></td>
+              <td th:text="${b.title}">Title</td>
+              <td th:text="${b.displayOrder}">0</td>
+              <td><span th:class="${b.active} ? 'badge-active' : 'badge-inactive'" th:text="${b.active} ? 'Active' : 'Inactive'">Active</span></td>
+              <td>
+                <form th:action="@{/admin/banners/{id}/delete(id=${b.id})}" method="post">
+                  <button type="submit" class="btn-outline-gold" style="padding:6px 12px; font-size:0.78rem;" data-confirm="Delete this banner?">Delete</button>
+                </form>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(banners)}"><td colspan="5" style="color:var(--sr-muted);">No banners yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sr-card">
+        <h4 style="margin-top:0;">Add Banner</h4>
+        <form th:action="@{/admin/banners/save}" method="post" enctype="multipart/form-data">
+          <div style="margin-bottom:12px;">
+            <label class="form-label">Title</label>
+            <input type="text" name="title" class="form-control" required />
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label">Subtitle</label>
+            <input type="text" name="subtitle" class="form-control" />
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label">Link URL (optional)</label>
+            <input type="text" name="linkUrl" class="form-control" placeholder="/rent-a-car" />
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label">Display Order</label>
+            <input type="number" name="displayOrder" class="form-control" value="0" />
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label">Banner Image</label>
+            <input type="file" name="image" class="form-control" accept="image/*" required />
+          </div>
+          <label class="form-label"><input type="checkbox" name="active" value="true" checked /> Active</label>
+          <button type="submit" class="btn-gold" style="width:100%; justify-content:center; margin-top:14px;">Add Banner</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

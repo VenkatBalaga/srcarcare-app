@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Admin Login')}"></head>
+<body>
+<div class="login-wrap">
+  <div class="sr-card login-card">
+    <h2 style="text-align:center; margin-top:0;"><span style="color:var(--sr-gold)">SR</span> CAR CARE</h2>
+    <p style="text-align:center; color:var(--sr-muted); margin-bottom:24px;">Admin Login</p>
+
+    <div class="alert-sr alert-danger-sr" th:if="${param.error}">Invalid username or password.</div>
+    <div class="alert-sr alert-success-sr" th:if="${param.logout}">You have been logged out.</div>
+
+    <form th:action="@{/admin/login}" method="post">
+      <div style="margin-bottom:16px;">
+        <label class="form-label">Username</label>
+        <input type="text" name="username" class="form-control" required autofocus />
+      </div>
+      <div style="margin-bottom:22px;">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" required />
+      </div>
+      <button type="submit" class="btn-gold" style="width:100%; justify-content:center;">Sign In</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

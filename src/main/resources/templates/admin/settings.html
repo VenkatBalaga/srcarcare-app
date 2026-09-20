@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Business Settings')}"></head>
+<body>
+<div class="admin-shell">
+  <div th:replace="~{admin/fragments/shell-head :: sidebar('settings')}"></div>
+  <main class="admin-main">
+    <div th:replace="~{admin/fragments/shell-head :: topbar('Business Settings')}"></div>
+    <div th:replace="~{admin/fragments/shell-head :: alerts}"></div>
+
+    <div class="sr-card" style="max-width:600px;">
+      <form th:action="@{/admin/settings/save}" method="post">
+        <div style="margin-bottom:14px;">
+          <label class="form-label">Business Name</label>
+          <input type="text" name="businessName" class="form-control" th:value="${settings.businessName}" required />
+        </div>
+        <div style="margin-bottom:14px;">
+          <label class="form-label">Owner / Contact Name</label>
+          <input type="text" name="ownerName" class="form-control" th:value="${settings.ownerName}" />
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+          <div>
+            <label class="form-label">Phone Number</label>
+            <input type="text" name="phoneNumber" class="form-control" th:value="${settings.phoneNumber}" required />
+          </div>
+          <div>
+            <label class="form-label">WhatsApp Number</label>
+            <input type="text" name="whatsappNumber" class="form-control" th:value="${settings.whatsappNumber}" required />
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label class="form-label">Business Email</label>
+          <input type="email" name="email" class="form-control" th:value="${settings.email}" />
+        </div>
+        <div style="margin-bottom:14px;">
+          <label class="form-label">Address</label>
+          <textarea name="address" class="form-control" rows="2" th:text="${settings.address}"></textarea>
+        </div>
+        <div style="margin-bottom:20px;">
+          <label class="form-label">Working Hours</label>
+          <input type="text" name="workingHours" class="form-control" th:value="${settings.workingHours}" />
+        </div>
+
+        <hr style="border-color: var(--sr-border); margin: 20px 0;" />
+        <h4>PhonePe Payment Settings</h4>
+        <p style="color:var(--sr-muted); font-size:0.85rem;">
+          Merchant ID / Salt Key credentials are configured securely via environment variables
+          (never entered here or exposed in the browser). Use this section only to enable/disable
+          PhonePe checkout and to record your PhonePe merchant ID for reference.
+        </p>
+        <label class="form-label" style="margin-bottom:14px; display:block;">
+          <input type="checkbox" name="phonepeEnabled" value="true" th:checked="${settings.phonepeEnabled}" /> Enable PhonePe Checkout
+        </label>
+        <div style="margin-bottom:20px;">
+          <label class="form-label">PhonePe Merchant ID (reference only)</label>
+          <input type="text" name="phonepeMerchantId" class="form-control" th:value="${settings.phonepeMerchantId}" />
+        </div>
+
+        <button type="submit" class="btn-gold">Save Settings</button>
+      </form>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

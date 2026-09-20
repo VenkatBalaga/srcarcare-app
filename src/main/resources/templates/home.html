@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Premium Car Rental & Car Care')}"></head>
+<body>
+<div th:replace="~{fragments/header :: header(${active})}"></div>
+
+<section class="hero">
+  <div class="container-xl">
+    <div class="hero-eyebrow">Premium Car Rental &amp; Car Care</div>
+    <h1>Drive with confidence.<br/>Cared for like our own.</h1>
+    <p class="lead">SR CAR CARE offers self-drive &amp; chauffeur-driven rentals, professional water wash, and expert
+      car servicing &mdash; all under one trusted roof.</p>
+    <div class="hero-cta">
+      <a href="/rent-a-car" class="btn-gold">Rent a Car &rarr;</a>
+      <a href="/car-wash" class="btn-outline-gold">Book a Wash</a>
+      <a href="/car-service" class="btn-outline-gold">Book a Service</a>
+    </div>
+  </div>
+</section>
+
+<div class="offer-strip" th:if="${not #lists.isEmpty(offers)}">
+  <div class="container-xl">
+    <span class="offer-item" th:each="offer : ${offers}">
+      &#9733; <span th:text="${offer.title}">Offer</span> &mdash; <span th:text="${offer.description}">Details</span>
+    </span>
+  </div>
+</div>
+
+<section class="section" style="padding-top:40px; padding-bottom:0;" th:if="${not #lists.isEmpty(banners)}">
+  <div class="container-xl">
+    <div class="vehicle-grid" style="grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));">
+      <a th:each="banner : ${banners}"
+         th:href="${banner.linkUrl != null and not #strings.isEmpty(banner.linkUrl)} ? ${banner.linkUrl} : '#'"
+         class="vehicle-card" style="text-decoration:none;">
+        <div class="vehicle-media" style="height:200px;" th:style="'height:200px;background-image:url(' + ${banner.imagePath} + ')'"></div>
+        <div class="vehicle-body">
+          <h3 th:text="${banner.title}">Banner Title</h3>
+          <p style="color:var(--sr-muted); font-size:0.88rem; margin:0;" th:text="${banner.subtitle}">Subtitle</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="container-xl">
+    <div class="section-title-wrap">
+      <div class="section-eyebrow">What We Offer</div>
+      <h2 class="section-title">Three Ways We Take Care of You</h2>
+      <p class="section-sub">From getting behind the wheel to keeping your car spotless and running smoothly.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="icon-badge">&#128663;</div>
+        <h3>Rent a Car</h3>
+        <p>Choose self-drive or with-driver rentals across 5-seater and 7-seater vehicles for any occasion.</p>
+        <a href="/rent-a-car" class="link-cta">Explore vehicles &rarr;</a>
+      </div>
+      <div class="service-card">
+        <div class="icon-badge">&#128167;</div>
+        <h3>Car Wash</h3>
+        <p>Professional water wash and interior detailing that keeps your car looking showroom-fresh.</p>
+        <a href="/car-wash" class="link-cta">Book a wash &rarr;</a>
+      </div>
+      <div class="service-card">
+        <div class="icon-badge">&#128295;</div>
+        <h3>Car Service</h3>
+        <p>General servicing, AC care and expert diagnostics performed by trained technicians.</p>
+        <a href="/car-service" class="link-cta">Book a service &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: var(--sr-charcoal); border-top:1px solid var(--sr-border); border-bottom:1px solid var(--sr-border);">
+  <div class="container-xl">
+    <div class="section-title-wrap">
+      <div class="section-eyebrow">Our Fleet</div>
+      <h2 class="section-title">Featured Vehicles</h2>
+    </div>
+    <div class="vehicle-grid">
+      <div class="vehicle-card" th:each="v : ${vehicles}">
+        <div class="vehicle-media" th:style="${v.imagePath != null} ? 'background-image:url(' + ${v.imagePath} + ')' : ''">
+          <span class="badge-seat" th:text="${v.seatingCapacity} + ' Seater'">5 Seater</span>
+        </div>
+        <div class="vehicle-body">
+          <h3 th:text="${v.name}">Vehicle</h3>
+          <div class="vehicle-tags">
+            <span class="tag-pill" th:if="${v.selfDriveAvailable}">Self Drive</span>
+            <span class="tag-pill" th:if="${v.withDriverAvailable}">With Driver</span>
+          </div>
+          <div class="vehicle-price">
+            <span th:if="${v.selfDriveAvailable}">&#8377;<span th:text="${v.selfDrivePrice}">0</span> <small>/ day self-drive</small></span>
+          </div>
+          <a th:href="@{/rent-a-car/{id}(id=${v.id})}" class="btn-outline-gold" style="justify-content:center;">View &amp; Book</a>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:36px;">
+      <a href="/rent-a-car" class="btn-gold">View All Vehicles</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" th:if="${not #lists.isEmpty(reviews)}">
+  <div class="container-xl">
+    <div class="section-title-wrap">
+      <div class="section-eyebrow">Testimonials</div>
+      <h2 class="section-title">What Our Customers Say</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card" th:each="r : ${reviews}">
+        <div style="color:var(--sr-gold); margin-bottom:10px;">
+          <span th:each="i : ${#numbers.sequence(1, r.rating)}">&#9733;</span>
+        </div>
+        <p th:text="${r.reviewText}">Great service!</p>
+        <strong th:text="${r.customerName}">Customer</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: floatingActions}"></div>
+<script src="/js/main.js"></script>
+</body>
+</html>

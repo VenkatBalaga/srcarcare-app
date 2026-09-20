@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Online Payment')}"></head>
+<body>
+<div th:replace="~{fragments/header :: header('payment')}"></div>
+
+<section class="section">
+  <div class="container-xl" style="max-width:560px;">
+    <div class="sr-card" style="text-align:center;">
+      <div style="font-size:2.5rem; margin-bottom:14px;">&#128179;</div>
+      <h2 style="margin-top:0;">Online Payment Coming Soon</h2>
+      <p style="color:var(--sr-muted);">
+        Online payment via PhonePe is being set up for SR CAR CARE. Your booking (reference
+        <strong th:text="${txn}">TXN</strong>) has already been recorded &mdash; our team will contact you
+        to confirm and arrange payment on pickup or via UPI/bank transfer.
+      </p>
+      <a href="/" class="btn-gold" style="justify-content:center;">Back to Home</a>
+    </div>
+  </div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

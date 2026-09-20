@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Payment Status')}"></head>
+<body>
+<div th:replace="~{fragments/header :: header('payment')}"></div>
+
+<section class="section">
+  <div class="container-xl" style="max-width:560px;">
+    <div class="sr-card" style="text-align:center;">
+      <h2 style="margin-top:0;">Payment Status</h2>
+      <p>Transaction: <strong th:text="${transaction.merchantTransactionId}">TXN</strong></p>
+      <p>Amount: &#8377;<span th:text="${transaction.amount}">0</span></p>
+      <p>Status: <span class="status-pill" th:text="${transaction.status}">INITIATED</span></p>
+      <a href="/" class="btn-gold" style="justify-content:center;">Back to Home</a>
+    </div>
+  </div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

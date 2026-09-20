@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: meta('Service Options')}"></head>
+<body>
+<div class="admin-shell">
+  <div th:replace="~{admin/fragments/shell-head :: sidebar('service-options')}"></div>
+  <main class="admin-main">
+    <div th:replace="~{admin/fragments/shell-head :: topbar('Car Service Options')}"></div>
+    <div th:replace="~{admin/fragments/shell-head :: alerts}"></div>
+
+    <div style="display:grid; grid-template-columns:1.3fr 1fr; gap:24px;">
+      <div class="table-responsive-sr">
+        <table class="table-dark-sr">
+          <thead><tr><th>Name</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr th:each="o : ${options}">
+              <td th:text="${o.name}">Name</td>
+              <td>&#8377;<span th:text="${o.price}">0</span></td>
+              <td><span th:class="${o.active} ? 'badge-active' : 'badge-inactive'" th:text="${o.active} ? 'Active' : 'Inactive'">Active</span></td>
+              <td style="display:flex; gap:8px;">
+                <form th:action="@{/admin/car-service/options/save}" method="post" style="display:contents;">
+                  <input type="hidden" name="id" th:value="${o.id}" />
+                  <input type="hidden" name="name" th:value="${o.name}" />
+                  <input type="hidden" name="description" th:value="${o.description}" />
+                  <input type="hidden" name="price" th:value="${o.price}" />
+                  <input type="hidden" name="active" th:value="${!o.active}" />
+                  <button type="submit" class="btn-outline-gold" style="padding:6px 12px; font-size:0.78rem;" th:text="${o.active} ? 'Disable' : 'Enable'">Toggle</button>
+                </form>
+                <form th:action="@{/admin/car-service/options/{id}/delete(id=${o.id})}" method="post">
+                  <button type="submit" class="btn-outline-gold" style="padding:6px 12px; font-size:0.78rem;" data-confirm="Delete this service option?">Delete</button>
+                </form>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(options)}"><td colspan="4" style="color:var(--sr-muted);">No service options yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sr-card">
+        <h4 style="margin-top:0;">Add Service Option</h4>
+        <form th:action="@{/admin/car-service/options/save}" method="post">
+          <div style="margin-bottom:12px;">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" required />
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="2"></textarea>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label class="form-label">Price</label>
+            <input type="number" step="0.01" name="price" class="form-control" required />
+          </div>
+          <label class="form-label"><input type="checkbox" name="active" value="true" checked /> Active</label>
+          <button type="submit" class="btn-gold" style="width:100%; justify-content:center; margin-top:14px;">Add Option</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>
