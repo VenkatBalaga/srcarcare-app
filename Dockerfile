@@ -7,7 +7,7 @@ COPY pom.xml .
 RUN mvn -q -B dependency:go-offline
 
 COPY src src
-RUN mvn -q -B -DskipTests clean package && \
+RUN mvn -q -B clean package && \
     mv target/srcarcare-app.jar /app/app.jar
 
 # --- Runtime stage ---
@@ -17,12 +17,11 @@ WORKDIR /app
 RUN useradd -m srcarcare
 COPY --from=build /app/app.jar /app/app.jar
 
-# Persistent data directory - mount a volume here on the hosting platform
-# so the H2 database file and uploaded photos survive restarts/redeploys.
+# Railway mounts persistent volumes as root. Startup prepares the writable
+# directories, then drops privileges before launching the application.
 RUN mkdir -p /data && chown -R srcarcare:srcarcare /data /app
 ENV SRCARCARE_DATA_DIR=/data
 
-USER srcarcare
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["sh", "-c", "mkdir -p /data/db /data/uploads && chown -R srcarcare:srcarcare /data && exec runuser -u srcarcare -- java -jar /app/app.jar"]
